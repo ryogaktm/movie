@@ -1,0 +1,19 @@
+# 本番にしかないデータ（deploy.yml の exclude と同じ内容）
+# ログイン情報（サーバー上で setup.php が作成）
+config.php
+
+# 動画・サムネイル・視聴履歴・ログイン状態はサーバーにだけ置く
+# （フォルダを保護する .htaccess だけは Git で管理）
+movie/*
+!movie/.htaccess
+thumbs/*
+!thumbs/.htaccess
+data/*
+!data/.htaccess
+
+# 自動アップロードがサーバーに置く管理ファイル
+.ftp-deploy-sync-state.json
+
+*.log
+.DS_Store
+Thumbs.db

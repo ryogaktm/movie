@@ -1,0 +1,43 @@
+name: Deploy via FTP
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    # リポジトリ変数 FTP_DEPLOY=true を設定するまでは動きません
+    if: ${{ vars.FTP_DEPLOY == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: 21
+          server-dir: ${{ secrets.FTP_DIR }}
+          protocol: ftps
+          # 本番にしかないデータ（.gitignore と同じ内容）
+          #   config.php … ログイン情報（setup.php で作成）
+          #   movie/     … 動画本体
+          #   thumbs/    … サムネイル
+          #   data/      … 視聴履歴・ログイン状態・署名用の鍵
+          # 各フォルダの .htaccess（直接アクセス禁止）だけはアップロードする
+          exclude: |
+            **/.git*
+            **/.git*/**
+            .github/**
+            README.md
+            config.php
+            movie/*.mp4
+            movie/*.m4v
+            movie/*.webm
+            movie/*.mov
+            movie/*.MP4
+            thumbs/*.jpg
+            data/sessions/**
+            data/*.json
+            data/secret.key

@@ -90,14 +90,8 @@ Fire TV の Silk ブラウザなどテレビで開くと自動でテレビ用の
 
 ## GitHub から自動アップロード（FTP）
 
-`main` に push すると GitHub Actions がサーバーへ FTP で自動アップロードします（`.github/workflows/deploy.yml`）。
+`main` に push すると、変更したファイルだけがサーバーへ FTPS で自動アップロードされます（`.github/workflows/deploy.yml`）。
 
-1. GitHub に新しいリポジトリを作る（Private 推奨）
-2. このフォルダを push
-3. リポジトリの Settings → Secrets and variables → Actions → New repository secret で4つ登録
-   - `FTP_SERVER` / `FTP_USERNAME` / `FTP_PASSWORD`
-   - `FTP_DIR` … アップロード先。最後は `/`（例: `/example.com/public_html/movie/`）
-4. 以後は push するだけで反映。結果は Actions タブで確認（緑=成功）
-
-- 動画・サムネイル・config.php・視聴履歴は Git に入らないので、サーバー上のものは上書きも削除もされません
-- `protocol: ftps` でエラーになるサーバーは、deploy.yml の該当行を `ftp` に変更
+- Settings → Secrets and variables → Actions の **Secrets** に `FTP_SERVER` / `FTP_USERNAME` / `FTP_PASSWORD` / `FTP_DIR`（末尾 `/`）
+- **Variables** に `FTP_DEPLOY` = `true`（これが無い間は動かない。止めたい時は true 以外に）
+- 動画・サムネイル・config.php・視聴履歴は Git に入れずアップロードもしないので、本番のものは消えません
